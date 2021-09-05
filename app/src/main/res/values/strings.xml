@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">widget</string>
+    <string name="auto_name">测试自动能否拉活</string>
+    <string name="handle_name">测试手动能否拉活</string>
+</resources>
