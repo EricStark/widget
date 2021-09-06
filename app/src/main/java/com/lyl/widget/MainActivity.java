@@ -7,11 +7,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.lyl.widget.service.WidgetService;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btn_auto = null;
     private Button btn_handle = null;
-    private String setting = null;
+    //默认是手动启动服务
+    private String setting = AUTO;
+    private static String AUTO = "auto";
+    private static String HANDLE = "handle";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if ("handle".equals(setting)) {
+        //如果设置为handle 则在activity销毁时杀死服务
+        if (HANDLE.equals(setting)) {
             stopService(new Intent(this, WidgetService.class));
         }
     }
@@ -34,10 +40,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.auto) {
-            setting = "auto";
+            setting = AUTO;
         }
         if (v.getId() == R.id.handle) {
-            setting = "handle";
+            setting = HANDLE;
         }
         Toast.makeText(this, "设置成功", Toast.LENGTH_SHORT).show();
     }

@@ -1,15 +1,13 @@
-package com.lyl.widget;
+package com.lyl.widget.service;
 
-import android.app.ActivityManager;
 import android.app.Service;
-import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.util.List;
+import com.lyl.widget.widget.WidgetProvider;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,6 +34,7 @@ public class WidgetService extends Service {
             }
         };
         mTimer.schedule(mTimerTask, 1000, UPDATE_TIME);
+        WidgetProvider.witchService = 0;
     }
 
     @Nullable

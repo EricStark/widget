@@ -1,4 +1,4 @@
-package com.lyl.widget;
+package com.lyl.widget.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -6,10 +6,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import com.lyl.widget.R;
+import com.lyl.widget.service.MyJobService;
+import com.lyl.widget.service.WidgetService;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,7 +24,9 @@ public class WidgetProvider extends AppWidgetProvider {
     private static final Set<Integer> idsSet = new HashSet<>();
     private SharedPreferences preferences = null;
     private static final String TAG = "WidgetProvider";
+    //模拟刷新的数据
     private static int mIndex = 0;
+    public static int witchService = -1;
 
     /**
      * 接收窗口小部件点击时发送的广播
@@ -33,25 +38,25 @@ public class WidgetProvider extends AppWidgetProvider {
         final String action = intent.getAction();
 
         if (ACTION_UPDATE_ALL.equals(action)) {
-            updateAllAppWidgets(context, AppWidgetManager.getInstance(context), idsSet);
+            updateAllAppWidgets(context, AppWidgetManager.getInstance(context));
         } else if (intent.hasCategory(Intent.CATEGORY_ALTERNATIVE)) {
             mIndex = 0;
-            updateAllAppWidgets(context, AppWidgetManager.getInstance(context), idsSet);
+            updateAllAppWidgets(context, AppWidgetManager.getInstance(context));
         }
     }
 
     // 更新所有的 widget
-    private void updateAllAppWidgets(Context context, AppWidgetManager appWidgetManager, Set<Integer> set) {
+    private void updateAllAppWidgets(Context context, AppWidgetManager appWidgetManager) {
         Log.d(TAG, "WidgetProvider 的 updateAllAppWidgets 执行");
         // widget 的id
         int appID = -1;
         // 迭代器，用于遍历所有保存的widget的id
-        Iterator it = set.iterator();
+        Iterator it = idsSet.iterator();
 
         // 要显示的那个数字，每更新一次 + 1
         mIndex++;
 
-        if (!set.isEmpty()) {
+        if (!idsSet.isEmpty()) {
             appID = (Integer) it.next();
         } else if (context.getSharedPreferences("widget", Context.MODE_PRIVATE).getInt("first", -1) != -1) {
             appID = context.getSharedPreferences("widget", Context.MODE_PRIVATE).getInt("first", -1);
@@ -66,7 +71,8 @@ public class WidgetProvider extends AppWidgetProvider {
             // 设置点击按钮对应的PendingIntent：即点击按钮时，发送广播。
             remoteView.setOnClickPendingIntent(R.id.widget_btn_reset, getResetPendingIntent(context));
             remoteView.setOnClickPendingIntent(R.id.widget_btn_open, getOpenPendingIntent(context));
-
+            //使用JobScheduler拉活进程后，后续服务会一直执行，并在通知栏可见
+            remoteView.setOnClickPendingIntent(R.id.widget_btn_restart, getJobSchedulerIntent(context));
             // 更新 widget
             appWidgetManager.updateAppWidget(appID, remoteView);
             Log.d(TAG, "桌面小部件更新完成");
@@ -90,6 +96,19 @@ public class WidgetProvider extends AppWidgetProvider {
     private PendingIntent getOpenPendingIntent(Context context) {
         Intent intent = new Intent();
         intent.setClass(context, WidgetService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+        return pendingIntent;
+    }
+
+    /**
+     * 打开JobScheduler拉活进程
+     *
+     * @param context
+     * @return
+     */
+    private PendingIntent getJobSchedulerIntent(Context context) {
+        Intent intent = new Intent();
+        intent.setClass(context, MyJobService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
         return pendingIntent;
     }
@@ -144,9 +163,17 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         Log.d(TAG, "WidgetProvider 的 onDisabled 执行");
-        // 在最后一个 widget 被删除时，终止服务
-        Intent intent = new Intent(context, WidgetService.class);
-        context.stopService(intent);
-        Toast.makeText(context, "服务停止", Toast.LENGTH_SHORT).show();
+        if (witchService == 0) {
+            // 在最后一个 widget 被删除时，终止服务
+            Intent intent = new Intent(context, WidgetService.class);
+            context.stopService(intent);
+            Toast.makeText(context, "服务停止", Toast.LENGTH_SHORT).show();
+        }
+        if (witchService == 1) {
+            // 在最后一个 widget 被删除时，终止服务
+            Intent intent = new Intent(context, MyJobService.class);
+            context.stopService(intent);
+            Toast.makeText(context, "服务停止", Toast.LENGTH_SHORT).show();
+        }
     }
 }

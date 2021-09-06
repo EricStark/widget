@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lyl.widget">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,7 +12,7 @@
         android:theme="@style/AppTheme">
 
         <!-- 声明widget对应的AppWidgetProvider -->
-        <receiver android:name="WidgetProvider">
+        <receiver android:name=".widget.WidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.lyl.widget.UPDATE_ALL" />
@@ -23,11 +24,14 @@
         </receiver>
 
         <!-- 用来计时，发送 通知桌面部件更新 -->
-        <service android:name=".WidgetService">
+        <service android:name=".service.WidgetService">
             <intent-filter>
                 <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" />
             </intent-filter>
         </service>
+        <service
+            android:name=".service.MyJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

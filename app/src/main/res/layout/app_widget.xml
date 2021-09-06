@@ -17,24 +17,33 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/widget_btn_reset"
             style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
-            android:text="恢复" />
+            android:text="恢复"
+            android:textColor="@color/colorAccent" />
 
         <Button
             android:id="@+id/widget_btn_open"
-            android:textColor="@color/colorAccent"
             style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="打开页面" />
+            android:layout_marginTop="4dp"
+            android:text="Service拉活"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/widget_btn_restart"
+            style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="JobService拉活"
+            android:textColor="@color/colorAccent" />
 
     </LinearLayout>
 
