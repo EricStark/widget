@@ -39,10 +39,11 @@ public class WidgetProvider extends AppWidgetProvider {
 
         if (ACTION_UPDATE_ALL.equals(action)) {
             updateAllAppWidgets(context, AppWidgetManager.getInstance(context));
-        } else if (intent.hasCategory(Intent.CATEGORY_ALTERNATIVE)) {
-            mIndex = 0;
-            updateAllAppWidgets(context, AppWidgetManager.getInstance(context));
         }
+//        else if (intent.hasCategory(Intent.CATEGORY_ALTERNATIVE)) {
+//            mIndex = 0;
+//            updateAllAppWidgets(context, AppWidgetManager.getInstance(context));
+//        }
     }
 
     // 更新所有的 widget
@@ -69,7 +70,7 @@ public class WidgetProvider extends AppWidgetProvider {
             remoteView.setTextViewText(R.id.widget_txt, String.valueOf(mIndex));
 
             // 设置点击按钮对应的PendingIntent：即点击按钮时，发送广播。
-            remoteView.setOnClickPendingIntent(R.id.widget_btn_reset, getResetPendingIntent(context));
+            //remoteView.setOnClickPendingIntent(R.id.widget_btn_reset, getResetPendingIntent(context));
             remoteView.setOnClickPendingIntent(R.id.widget_btn_open, getOpenPendingIntent(context));
             //使用JobScheduler拉活进程后，后续服务会一直执行，并在通知栏可见
             remoteView.setOnClickPendingIntent(R.id.widget_btn_restart, getJobSchedulerIntent(context));
@@ -82,13 +83,13 @@ public class WidgetProvider extends AppWidgetProvider {
     /**
      * 获取 重置数字的广播
      */
-    private PendingIntent getResetPendingIntent(Context context) {
-        Intent intent = new Intent();
-        intent.setClass(context, WidgetProvider.class);
-        intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-        return pendingIntent;
-    }
+//    private PendingIntent getResetPendingIntent(Context context) {
+//        Intent intent = new Intent();
+//        intent.setClass(context, WidgetProvider.class);
+//        intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+//        return pendingIntent;
+//    }
 
     /**
      * 获取 打开 service 的 PendingIntent

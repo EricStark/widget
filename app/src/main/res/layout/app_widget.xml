@@ -20,14 +20,6 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/widget_btn_reset"
-            style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="恢复"
-            android:textColor="@color/colorAccent" />
-
-        <Button
             android:id="@+id/widget_btn_open"
             style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
             android:layout_width="wrap_content"

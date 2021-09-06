@@ -3,20 +3,18 @@ package com.lyl.widget;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.lyl.widget.service.WidgetService;
+import com.lyl.widget.widget.Const;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btn_auto = null;
     private Button btn_handle = null;
-    //默认是手动启动服务
-    private String setting = AUTO;
-    private static String AUTO = "auto";
-    private static String HANDLE = "handle";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +29,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //如果设置为handle 则在activity销毁时杀死服务
-        if (HANDLE.equals(setting)) {
+        if (Const.HANDLE.equals(Const.SETTING)) {
             stopService(new Intent(this, WidgetService.class));
+            Log.d("main", "app进程退出，停止更新服务");
+        } else {
+            Log.d("main", "app进程退出");
         }
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.auto) {
-            setting = AUTO;
+            Const.SETTING = Const.AUTO;
+            Log.d("mainactivity", "设置自动成功");
         }
         if (v.getId() == R.id.handle) {
-            setting = HANDLE;
+            Const.SETTING = Const.HANDLE;
+            Log.d("mainactivity", "设置手动成功");
         }
         Toast.makeText(this, "设置成功", Toast.LENGTH_SHORT).show();
     }
